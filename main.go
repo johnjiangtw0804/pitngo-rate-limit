@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -28,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("LoadConfig fail: %v", err)
 	}
-	// log.Default().Println(env)
+	log.Default().Println(env)
 	redisClient, err := infra.ConnectDBS(env)
 	if err != nil {
 		// %v is a general-purpose formatting verb used
@@ -61,7 +62,7 @@ func main() {
 	}
 
 	srv := &http.Server{
-		Addr:    env.AppPort,
+		Addr:    fmt.Sprintf(":%s", env.AppPort),
 		Handler: router,
 	}
 
