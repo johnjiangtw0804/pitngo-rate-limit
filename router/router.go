@@ -24,9 +24,12 @@ func RegisterRouter(config *env.Configuration, redisClient *redis.Client) (*gin.
 		ExposeHeaders:    []string{"Content-Length"},
 	}))
 
-	fix_window_limiter := rate_limit.NewFixedWindowLimiter(redisClient, time.Minute, 10)
-	checkEndpoint := &CheckEndpoint{Limiter: fix_window_limiter}
-	router.GET("/api/v1/check/:userId", checkEndpoint.CheckHandler())
+	checkEndpoint := &CheckEndpoint{Limiters: map[string]rate_limit.IRateLimiter{
+		"fixed": rate_limit.NewFixedWindowLimiter(redisClient, time.Minute, 10),
+		// "token":   tokenLimiter,
+		// "sliding": slidingLimiter,
+	}}
+	router.GET("/api/v1/check", checkEndpoint.CheckHandler())
 
 	return router, nil
 }

@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/johnjiangtw0804/pitngo-rate-limit/dao"
 	"github.com/johnjiangtw0804/pitngo-rate-limit/env"
-	"github.com/johnjiangtw0804/pitngo-rate-limit/infra"
 	router "github.com/johnjiangtw0804/pitngo-rate-limit/router"
 	"github.com/spf13/viper"
 )
@@ -30,7 +30,7 @@ func main() {
 		log.Fatalf("LoadConfig fail: %v", err)
 	}
 	log.Default().Println(env)
-	redisClient, err := infra.ConnectDBS(env)
+	redisClient, err := dao.ConnectDBS(env)
 	if err != nil {
 		// %v is a general-purpose formatting verb used
 		log.Fatalf("Connect Redis fail: %v", err)

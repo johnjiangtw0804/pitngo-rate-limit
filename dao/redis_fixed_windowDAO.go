@@ -1,4 +1,4 @@
-package infra
+package dao
 
 import (
 	"context"
@@ -9,18 +9,18 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type IFixWindowOps interface {
+type IFixWindowDAO interface {
 	// we need to set the rate_limit:userid:currentTimeToMins
 	Set(string) (int64, error)
 }
 
-type FixWindowOps struct {
+type FixWindowDao struct {
 	Client     *redis.Client
 	WindowSize time.Duration
 }
 
-func (f *FixWindowOps) Set(userId string) (int64, error) {
-	key := fmt.Sprintf("rate_limit:%s:%s", userId, time.Now().Format("200601021504"))
+func (f *FixWindowDao) Set(userId string) (int64, error) {
+	key := fmt.Sprintf("rate_limit:fixedWindow:%s:%s", userId, time.Now().Format("200601021504"))
 
 	const luaScript = `
 	local counter = redis.call("INCR", KEYS[1])
