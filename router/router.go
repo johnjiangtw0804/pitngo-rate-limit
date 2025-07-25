@@ -24,9 +24,11 @@ func RegisterRouter(config *env.Configuration, redisClient *redis.Client) (*gin.
 		ExposeHeaders:    []string{"Content-Length"},
 	}))
 
+	var tokenRefillRate int64 = 1 // 1 per second
+	var tokenCapacity int64 = 100 // maximum 100 tokens
 	checkEndpoint := &CheckEndpoint{Limiters: map[string]rate_limit.IRateLimiter{
 		"fixed": rate_limit.NewFixedWindowLimiter(redisClient, time.Minute, 10),
-		// "token":   tokenLimiter,
+		"token": rate_limit.NewTokenBucketLimiter(redisClient, tokenRefillRate, tokenCapacity),
 		// "sliding": slidingLimiter,
 	}}
 	router.GET("/api/v1/check", checkEndpoint.CheckHandler())

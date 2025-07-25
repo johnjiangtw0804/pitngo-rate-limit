@@ -19,14 +19,14 @@ type TokenBucketDao struct {
 	Capacity   int64
 }
 
-// Redis structure
-//
-//	token_bucket:{user_id} -> {
-//	  "tokens": 8,
-//	  "last_refill_timestamp": 1721905000
-//	}
 func (t *TokenBucketDao) AllowIfEnoughToken(userId string) (bool, error) {
 	key := fmt.Sprintf("rate_limit:tokenBucket:%s", userId)
+	// Redis structure
+	//
+	//	token_bucket:{user_id} -> {
+	//	  "tokens": 8,
+	//	  "last_refill_timestamp": 1721905000
+	//	}
 	const luaScript = `
 	local key = KEYS[1]
 	local now = tonumber(ARGV[1])
