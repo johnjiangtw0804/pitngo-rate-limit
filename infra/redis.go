@@ -1,4 +1,4 @@
-package dao
+package infra
 
 import (
 	"context"
