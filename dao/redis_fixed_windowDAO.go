@@ -10,8 +10,7 @@ import (
 )
 
 type IFixWindowDAO interface {
-	// we need to set the rate_limit:userid:currentTimeToMins
-	Set(string) (int64, error)
+	IsAllow(string) (int64, error)
 }
 
 type FixWindowDao struct {
@@ -19,7 +18,7 @@ type FixWindowDao struct {
 	WindowSize time.Duration
 }
 
-func (f *FixWindowDao) Set(userId string) (int64, error) {
+func (f *FixWindowDao) IsAllow(userId string) (int64, error) {
 	key := fmt.Sprintf("rate_limit:fixedWindow:%s:%s", userId, time.Now().Format("200601021504"))
 
 	const luaScript = `

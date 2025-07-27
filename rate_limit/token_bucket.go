@@ -10,7 +10,7 @@ type TokenBucketLimiter struct {
 }
 
 func (t *TokenBucketLimiter) Allow(userid string) (bool, error) {
-	return t.RedisDao.AllowIfEnoughToken(userid)
+	return t.RedisDao.IsAllow(userid)
 }
 
 func NewTokenBucketLimiter(redisClient *redis.Client, refillRate int64, capacity int64) IRateLimiter {

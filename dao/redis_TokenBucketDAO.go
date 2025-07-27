@@ -10,7 +10,7 @@ import (
 )
 
 type ITokenBucketDao interface {
-	AllowIfEnoughToken(userId string) (bool, error)
+	IsAllow(userId string) (bool, error)
 }
 
 type TokenBucketDao struct {
@@ -19,8 +19,8 @@ type TokenBucketDao struct {
 	Capacity   int64
 }
 
-func (t *TokenBucketDao) AllowIfEnoughToken(userId string) (bool, error) {
-	key := fmt.Sprintf("rate_limit:tokenBucket:%s", userId)
+func (t *TokenBucketDao) IsAllow(userId string) (bool, error) {
+	key := fmt.Sprintf("rate_limit:%s:tokenBucket:%d:%d", userId, t.RefillRate, t.Capacity)
 	// Redis structure
 	//
 	//	token_bucket:{user_id} -> {

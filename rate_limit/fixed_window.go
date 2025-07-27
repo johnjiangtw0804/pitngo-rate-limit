@@ -14,7 +14,7 @@ type FixedWindowLimiter struct {
 }
 
 func (f *FixedWindowLimiter) Allow(userid string) (bool, error) {
-	count, err := f.RedisDao.Set(userid)
+	count, err := f.RedisDao.IsAllow(userid)
 	if err != nil {
 		return false, fmt.Errorf("Failed Redis Set %w", err)
 	}
