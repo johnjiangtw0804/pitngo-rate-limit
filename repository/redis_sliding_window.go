@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"context"
@@ -10,17 +10,17 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type ISlidingWindowDAO interface {
+type ISlidingWindowRepo interface {
 	IsAllow(string) (bool, error)
 }
 
-type SlidingWindowDAO struct {
+type SlidingWindowRepo struct {
 	Client   *redis.Client // Make sure to use *redis.Client
 	WindowMS int64
 	MaxHits  int64
 }
 
-func (s *SlidingWindowDAO) IsAllow(userId string) (bool, error) {
+func (s *SlidingWindowRepo) IsAllow(userId string) (bool, error) {
 	key := fmt.Sprintf("rate_limit:%s:%d:%d:slidingWindow", userId, s.WindowMS, s.MaxHits)
 	ctx := context.Background()
 	now := time.Now().UnixMilli()

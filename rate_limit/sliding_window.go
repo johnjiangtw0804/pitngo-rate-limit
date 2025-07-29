@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	dao "github.com/johnjiangtw0804/pitngo-rate-limit/dao"
+	"github.com/johnjiangtw0804/pitngo-rate-limit/repository"
 	"github.com/redis/go-redis/v9"
 )
 
 type SlidingWindowLimiter struct {
-	RedisDao dao.ISlidingWindowDAO
+	RedisDao repository.ISlidingWindowRepo
 	WindowMS int64 // duration in ms
 	MaxHits  int64
 }
@@ -24,7 +24,7 @@ func (s *SlidingWindowLimiter) Allow(userid string) (bool, error) {
 
 func NewSlidingWindowLimiter(redisClient *redis.Client, windowDuration time.Duration, maxHits int64) IRateLimiter {
 	slidingWindowLimiter := &SlidingWindowLimiter{
-		RedisDao: &dao.SlidingWindowDAO{
+		RedisDao: &repository.SlidingWindowRepo{
 			Client:  redisClient,
 			MaxHits: maxHits,
 			// A Duration represents the elapsed time between two instants as an int64 nanosecond count

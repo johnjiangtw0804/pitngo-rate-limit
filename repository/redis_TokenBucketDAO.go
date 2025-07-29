@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"context"
@@ -9,17 +9,17 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type ITokenBucketDao interface {
+type ITokenBucketRepo interface {
 	IsAllow(userId string) (bool, error)
 }
 
-type TokenBucketDao struct {
+type TokenBucketRepo struct {
 	Client     *redis.Client
 	RefillRate int64 // in sec
 	Capacity   int64
 }
 
-func (t *TokenBucketDao) IsAllow(userId string) (bool, error) {
+func (t *TokenBucketRepo) IsAllow(userId string) (bool, error) {
 	key := fmt.Sprintf("rate_limit:%s:tokenBucket:%d:%d", userId, t.RefillRate, t.Capacity)
 	// Redis structure
 	//

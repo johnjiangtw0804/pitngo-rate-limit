@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"context"
@@ -9,16 +9,16 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type IFixWindowDAO interface {
+type IFixWindowRepo interface {
 	IsAllow(string) (int64, error)
 }
 
-type FixWindowDao struct {
+type FixWindowRepo struct {
 	Client     *redis.Client
 	WindowSize time.Duration
 }
 
-func (f *FixWindowDao) IsAllow(userId string) (int64, error) {
+func (f *FixWindowRepo) IsAllow(userId string) (int64, error) {
 	key := fmt.Sprintf("rate_limit:fixedWindow:%s:%s", userId, time.Now().Format("200601021504"))
 
 	const luaScript = `
